@@ -1,150 +1,117 @@
-#importing python packages
+#python package for working with streamlit web application
 import streamlit as st
+
+#python package for working with dataframe and csv files
 import pandas as pd
+
+#python package for working with arrays
 import numpy as np
+
+# python package for working with operating system files system
 import os
+
+# python package for load machine learning models from the folders
 import joblib
+
+# python package to plot graphs
 import matplotlib.pyplot as plt
 import matplotlib
+
+# importing all functions and classes from database file from same directory
 from manage_db import *
+
+# python package to work with on making secure hash passwords
 import hashlib
+
+# ??
 import lime
 import lime.lime_tabular
 
-import streamlit as st
-import base64
-
-main_bg = "../ashwin.jpg"
-main_bg_ext = "jpg"
-
-side_bg = "../ashwin.jpg"
-side_bg_ext = "jpg"
-
-st.markdown(
-    f"""
-    <style>
-    .reportview-container {{
-        background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()})
-    }}
-   .sidebar .sidebar-content {{
-        background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()})
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# declaring dictionary
+male_female_dict={"male":1,"female":2}
+yes_no_dict={"yes":1,"no":0}
 
 
-#AGG backend is for writing to file, not for rendering in a window.
-matplotlib.use('Agg')
-
-
-
-
-#list of columns name
-feature_names_best=['age','sex','steroid','antivirals','fatigue','spiders','malaise','anorexia','liver_big','liver_firm','spleen_palpable','ascites','varices','bilirubin','alk_phosphate','sgot','albumin','protime','histology']
-
-
-
-#dictionary of gender
-gender_dictionary={"male":1,"female":2}
-
-
-
-# dictionary of features
-feature_dictionary={"yes":2,"no":1}
-
-
-
-def get_value(sex_key,my_dict):
-	for key,val in my_dict.items():
+# defining function to return values from dictionary keys
+def get_sex_value(sex_key):
+	male_female_dict={"male":1,"female":2}
+	for key,value in male_female_dict.items():
 		if sex_key==key:
-			return val
+			return value
 
-
-
-def get_key(val,my_dict):
-	for key,val in my_dict.items():
-		if val==key:
-			return key
-
-
-
-def get_feature_value(val):
-	feature_dictionary={"yes":1,"no":0}
-	for key,value in feature_dictionary.items():
-		if val==key:
+# defining function to return values from dictionary keys
+def get_yes_no_value(yes_no_val):
+	yes_no_dict={"yes":1,"no":0}
+	for key,value in yes_no_dict.items():
+		if yes_no_val==key:
 			return value
 			
-			
-			
+
 # load machine learning models from folder in read binary mode
-def load_model(model_file):
-	loaded_model=joblib.load(open(os.path.join(model_file),"rb"))
-	return loaded_model
-	
-	
-	
+def loading_ML_model(model_file_name):
+	loaded_model_ML=joblib.load(open(os.path.join(model_file_name),"rb"))
+	return loaded_model_ML
 
 # to generate secure hashed password so that database admin wont know your password
-def generate_hashes(password):
+def generate_hash_passwords(password):
 	return hashlib.sha256(str.encode(password)).hexdigest()
 
-
-	
-	
 # to verify whether password is same or not
-def verify_hashes(real_password,hashed_password):
-	if generate_hashes(real_password) == hashed_password:
+def verify_hash_passwords(real_password,hashed_password):
+	if generate_hash_passwords(real_password) == hashed_password:
 		return hashed_password
 	return False
 	
 
-
-
-#execution of webapp start from here
+#defination of streamlit webapp
 def main():
 	
-
 	#to show title on the main page
-	st.title("Hepatitis mortality prediction webapp")
-
+	st.title("Hepatitis Mortality Prediction Web App")
 
 	#list menu and submenu for setting options in list
-	menu=["home", "login", "signup"]
-	submenu=["plot","prediction"]
+	menu=["Home", "Login", "Sign-up"]
+	submenu=["Plot","Prediction"]
 
+	#sidebar subheader
+	st.sidebar.subheader("Hello, Good Morning Users")
+	st.sidebar.subheader("Welcome to the Hepatitis Mortality Prediction Web App created using streamlit in python")
+	
+	
 
 	#make a selectbox in the sidebar and pass menu list given above to show choices and return choice
-	choice=st.sidebar.selectbox("menu",menu)
+	choice=st.sidebar.selectbox("Please select from Home/Signup/Login given below to get started:",menu)
 	
+	st.sidebar.subheader("Created by:-")
+	st.sidebar.subheader("1.Ashwani Kumar[MCA]")
+	st.sidebar.subheader("2.Nitin Sharma[MCA]")
 	
 	#if choice is home then show subheader and a text below 
-	if choice=="home":
+	if choice=="Home":
 		st.subheader("WELCOME TO THE HOMEPAGE")
 		st.text("what is hepatitis disease?")
 	
 	
 	
 	#if choice is login then show 2 inputs for username and password and get data from the login form
-	elif choice=="login":
+	elif choice=="Login":
 	
 		#get username and password from the form
-		username=st.sidebar.text_input("Username")
-		real_password=st.sidebar.text_input("Password",type='password')
+		username=st.text_input("Username")
+		real_password=st.text_input("Password",type='password')
   
   
 		#make a checkbox in sidebar and if user clicks on checkbox and password is same then pass
-		if st.sidebar.checkbox("login"):
+		if st.checkbox("login"):
 			
 			#create a user table in the database
 			create_user_table()
 			
 			#generate hashed password and assign
-			hashed_password=generate_hashes(real_password)
+			hashed_password=generate_hash_passwords(real_password)
 			
-			#call login_user function pass username and returned value of verify_hashes function
-			result=check_login(username,verify_hashes(real_password,hashed_password))
+			#call login_user function pass username and returned value of verify_hash_passwords function
+			result=check_login(username,verify_hash_passwords(real_password,hashed_password))
 			
 			
 			if result:
@@ -209,33 +176,33 @@ def main():
 					age=st.number_input("age",7,80)
 					
 					
-					#show radio buttons having options given in gender_dictionary above
-					sex=st.radio("sex",tuple(gender_dictionary.keys()))
+					#show radio buttons having options given in male_female_dict dictionary above
+					sex=st.radio("sex",tuple(male_female_dict.keys()))
 					
 					
 					
-					#show radio buttons having options given in feature_dictionary above
-					steroid=st.radio("Do you take steroid?",tuple(feature_dictionary.keys()))
+					#show radio buttons having options given in yes_no_dict above
+					steroid=st.radio("Do you take steroid?",tuple(yes_no_dict.keys()))
 					
 					
-					#show radio buttons having options given in feature_dictionary above
-					antivirals=st.radio("Do you take Antivirals?",tuple(feature_dictionary.keys()))
+					#show radio buttons having options given in yes_no_dict above
+					antivirals=st.radio("Do you take Antivirals?",tuple(yes_no_dict.keys()))
 					
 					
-					#show radio buttons having options given in feature_dictionary above
-					fatigue=st.radio("Do you take fatigue?",tuple(feature_dictionary.keys()))
+					#show radio buttons having options given in yes_no_dict above
+					fatigue=st.radio("Do you take fatigue?",tuple(yes_no_dict.keys()))
 					
 					
-					#show radio buttons having options given in feature_dictionary above
-					spiders=st.radio("Presence of spider naevi",tuple(feature_dictionary.keys()))
+					#show radio buttons having options given in yes_no_dict above
+					spiders=st.radio("Presence of spider naevi",tuple(yes_no_dict.keys()))
 					
 					
-					#show select box having options given in feature_dictionary above 
-					ascites=st.selectbox("Ascites",tuple(feature_dictionary.keys()))
+					#show select box having options given in yes_no_dict above 
+					ascites=st.selectbox("Ascites",tuple(yes_no_dict.keys()))
 					
 					
-					#show select box having options given in feature_dictionary above 
-					varices=st.selectbox("presence of varices",tuple(feature_dictionary.keys()))
+					#show select box having options given in yes_no_dict above 
+					varices=st.selectbox("presence of varices",tuple(yes_no_dict.keys()))
 					
 					
 					#show range input
@@ -258,13 +225,13 @@ def main():
 					Prothrombin=st.number_input("Prothrombin",0.0,100.0)
 					
 					
-					#show select box having options given in feature_dictionary
-					histology=st.selectbox("Histology",tuple(feature_dictionary.keys()))
+					#show select box having options given in yes_no_dict
+					histology=st.selectbox("Histology",tuple(yes_no_dict.keys()))
 					
 
 					#making a list of features using functions
 					st.subheader("showing list of values returned from above input form")
-					feature_list = [age,get_value(sex,gender_dictionary),get_feature_value(steroid),get_feature_value(antivirals),get_feature_value(fatigue),get_feature_value(spiders),get_feature_value(ascites),get_feature_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_feature_value(histology)]
+					feature_list = [age,get_sex_value(sex),get_yes_no_value(steroid),get_yes_no_value(antivirals),get_yes_no_value(fatigue),get_yes_no_value(spiders),get_yes_no_value(ascites),get_yes_no_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_yes_no_value(histology)]
 					st.write(feature_list)
 					
 
@@ -288,36 +255,33 @@ def main():
 						if model_choice=="KNN":
 							
 							#load model file from models folder
-							loaded_model=load_model("./models/knn_hepB_model.pkl")
+							loaded_model_ML=loading_ML_model("./models/knn_hepB_model.pkl")
 							
 							#predict from loaded model and store
-							prediction=loaded_model.predict(single_sample)
+							prediction=loaded_model_ML.predict(single_sample)
 							
 							#predict probability from loaded model and store
-							pred_prob=loaded_model.predict_proba(single_sample)
+							pred_prob=loaded_model_ML.predict_proba(single_sample)
 						
 						#work if model is DecisionTree
 						elif model_choice=="DecisionTree":						
 							
-							loaded_model=load_model("models/decision_tree_clf_hepB_model.pkl")
+							loaded_model_ML=loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
 							
-							prediction=loaded_model.predict(single_sample)
+							prediction=loaded_model_ML.predict(single_sample)
 							
-							pred_prob=loaded_model.predict_proba(single_sample)
+							pred_prob=loaded_model_ML.predict_proba(single_sample)
 							
 						#work if model is LR
 						else:
 						
-							loaded_model=load_model("models/logistic_regression_hepB_model.pkl")
+							loaded_model_ML=loading_ML_model("models/logistic_regression_hepB_model.pkl")
 							
-							prediction=loaded_model.predict(single_sample)
+							prediction=loaded_model_ML.predict(single_sample)
 							
-							pred_prob=loaded_model.predict_proba(single_sample)
+							pred_prob=loaded_model_ML.predict_proba(single_sample)
 						
-						#st.write(prediction)
-						#prediction_label={"Die":1,"Live":2}
-						#final_result=get_key(prediction,prediction_label)
-						#st.write(final_result)
+						
 						
 						#if prediction came from above is 1 then patient dies
 						if prediction==1:
@@ -339,13 +303,38 @@ def main():
 							#show json format in webapp
 							st.json(pred_probability_score)
 						
-							workornot=st.checkbox("Interpret")
-							#create checkbox if clicked then return true and following code work	
+					if st.checkbox("Interpret"):
+						if model_choice == "KNN":
+							loaded_model_ML = loading_ML_model("models/knn_hepB_model.pkl")
 							
-							if workornot:
-								st.write(workornot)
-							else:
-								st.warning("checkbox not working")
+						elif model_choice == "DecisionTree":
+							loaded_model_ML = loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
+							
+						else:
+							loaded_model_ML = loading_ML_model("models/logistic_regression_hepB_model.pkl")
+							
+
+							# loaded_model_ML = loading_ML_model("models/logistic_regression_model.pkl")							
+							# 1 Die and 2 Live
+							df = pd.read_csv("data/clean_hepatitis_dataset.csv")
+							x = df[['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']]
+							feature_names = ['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']
+							class_names = ['Die(1)','Live(2)']
+							explainer = lime.lime_tabular.LimeTabularExplainer(x.values,feature_names=feature_names, class_names=class_names,discretize_continuous=True)
+							# The Explainer Instance
+							exp = explainer.explain_instance(np.array(feature_list), loaded_model_ML.predict_proba,num_features=13, top_labels=1)
+							exp.show_in_notebook(show_table=True, show_all=False)
+							# exp.save_to_file('lime_oi.html')
+							st.write(exp.as_list())
+							new_exp = exp.as_list()
+							label_limits = [i[0] for i in new_exp]
+							# st.write(label_limits)
+							label_scores = [i[1] for i in new_exp]
+							plt.barh(label_limits,label_scores)
+							st.pyplot()
+							plt.figure(figsize=(20,10))
+							fig = exp.as_pyplot_figure()
+							st.pyplot()
 					else:
 						st.warning("some error takes place")					
 				
@@ -360,7 +349,7 @@ def main():
 		else:
 			st.warning("either you did not login to the system or you did not sign up yet")		
 			
-	elif choice=="signup":
+	elif choice=="Sign-up":
 		
 		#get username from input form
 		new_username=st.text_input("username")
@@ -387,7 +376,7 @@ def main():
 			create_user_table()
 			
 			#call generate hashes function and return hashed password
-			hashed_new_password=generate_hashes(new_password)
+			hashed_new_password=generate_hash_passwords(new_password)
 			
 			#call adduserdata function in manage_db file
 			add_user_data(new_username,hashed_new_password)
