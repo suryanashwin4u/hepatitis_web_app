@@ -76,11 +76,9 @@ def main():
 	#sidebar subheader
 	st.sidebar.subheader("Hello, Good Morning Users")
 	st.sidebar.subheader("Welcome to the Hepatitis Mortality Prediction Web App created using streamlit in python")
-	
-	
 
 	#make a selectbox in the sidebar and pass menu list given above to show choices and return choice
-	choice=st.sidebar.selectbox("Please select from Home/Signup/Login given below to get started:",menu)
+	choice=st.sidebar.selectbox("To get started, Please select from the options given below:",menu)
 	
 	st.sidebar.subheader("Created by:-")
 	st.sidebar.subheader("1.Ashwani Kumar[MCA]")
@@ -90,8 +88,6 @@ def main():
 	if choice=="Home":
 		st.subheader("WELCOME TO THE HOMEPAGE")
 		st.text("what is hepatitis disease?")
-	
-	
 	
 	#if choice is login then show 2 inputs for username and password and get data from the login form
 	elif choice=="Login":
