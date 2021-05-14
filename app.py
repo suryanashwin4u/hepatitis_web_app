@@ -8,7 +8,31 @@ import matplotlib.pyplot as plt
 import matplotlib
 from manage_db import *
 import hashlib
+import lime
+import lime.lime_tabular
 
+import streamlit as st
+import base64
+
+main_bg = "../ashwin.jpg"
+main_bg_ext = "jpg"
+
+side_bg = "../ashwin.jpg"
+side_bg_ext = "jpg"
+
+st.markdown(
+    f"""
+    <style>
+    .reportview-container {{
+        background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()})
+    }}
+   .sidebar .sidebar-content {{
+        background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()})
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 #AGG backend is for writing to file, not for rendering in a window.
@@ -28,7 +52,7 @@ gender_dictionary={"male":1,"female":2}
 
 
 # dictionary of features
-feature_dictionary={"yes":1,"no":0}
+feature_dictionary={"yes":2,"no":1}
 
 
 
@@ -80,9 +104,10 @@ def verify_hashes(real_password,hashed_password):
 
 #execution of webapp start from here
 def main():
+	
 
 	#to show title on the main page
-	st.title("Hepatitis mortality prediction app")
+	st.title("Hepatitis mortality prediction webapp")
 
 
 	#list menu and submenu for setting options in list
@@ -96,7 +121,7 @@ def main():
 	
 	#if choice is home then show subheader and a text below 
 	if choice=="home":
-		st.subheader("HOMEPAGE")
+		st.subheader("WELCOME TO THE HOMEPAGE")
 		st.text("what is hepatitis disease?")
 	
 	
@@ -182,79 +207,81 @@ def main():
 
 					#set range in input box
 					age=st.number_input("age",7,80)
-					st.write(age)
+					
 					
 					#show radio buttons having options given in gender_dictionary above
 					sex=st.radio("sex",tuple(gender_dictionary.keys()))
-					st.write(sex)
+					
 					
 					
 					#show radio buttons having options given in feature_dictionary above
 					steroid=st.radio("Do you take steroid?",tuple(feature_dictionary.keys()))
-					st.write(steroid)
+					
 					
 					#show radio buttons having options given in feature_dictionary above
 					antivirals=st.radio("Do you take Antivirals?",tuple(feature_dictionary.keys()))
-					st.write(antivirals)
+					
 					
 					#show radio buttons having options given in feature_dictionary above
 					fatigue=st.radio("Do you take fatigue?",tuple(feature_dictionary.keys()))
-					st.write(fatigue)
+					
 					
 					#show radio buttons having options given in feature_dictionary above
 					spiders=st.radio("Presence of spider naevi",tuple(feature_dictionary.keys()))
-					st.write(spiders)
+					
 					
 					#show select box having options given in feature_dictionary above 
 					ascites=st.selectbox("Ascites",tuple(feature_dictionary.keys()))
-					st.write(ascites)
+					
 					
 					#show select box having options given in feature_dictionary above 
 					varices=st.selectbox("presence of varices",tuple(feature_dictionary.keys()))
-					st.write(varices)
+					
 					
 					#show range input
 					bilirubin=st.number_input("bilirubin content",0.0,8.0)
-					st.write(bilirubin)
+					
 					
 					#show range input
 					alk_phosphate=st.number_input("alkaline phosphate content",0.0,296.0)
-					st.write(alk_phosphate)
+					
 					
 					#show range input
 					sgot=st.number_input("Sgot",0.0,648.0)
-					st.write(sgot)
+					
 					
 					#show range input
 					albumin=st.number_input("albumin",0.0,6.4)
-					st.write(albumin)
+					
 					
 					#show range input
 					Prothrombin=st.number_input("Prothrombin",0.0,100.0)
-					st.write(Prothrombin)
+					
 					
 					#show select box having options given in feature_dictionary
 					histology=st.selectbox("Histology",tuple(feature_dictionary.keys()))
-					st.write(histology)
+					
 
 					#making a list of features using functions
+					st.subheader("showing list of values returned from above input form")
 					feature_list = [age,get_value(sex,gender_dictionary),get_feature_value(steroid),get_feature_value(antivirals),get_feature_value(fatigue),get_feature_value(spiders),get_feature_value(ascites),get_feature_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_feature_value(histology)]
 					st.write(feature_list)
 					
 
 					#dictionary of list
-					pretty_result={"age":age,"sex":sex,"steroid":steroid,"antivirals":antivirals,"spiders":spiders,"ascites":ascites,"varices":varices,"bilirubin":bilirubin,"alk_phosphate":alk_phosphate,"sgot":sgot,"albumin":albumin,"Prothrombin":Prothrombin,"histology":histology}
+					st.subheader("showing in json format after conversion from dictionary")
+					st.json({"age":age,"sex":sex,"steroid":steroid,"antivirals":antivirals,"spiders":spiders,"ascites":ascites,"varices":varices,"bilirubin":bilirubin,"alk_phosphate":alk_phosphate,"sgot":sgot,"albumin":albumin,"Prothrombin":Prothrombin,"histology":histology})
 
-					#json of pretty result
-					st.json(pretty_result)
 
-					#make array of feture_list
+					#convert into numpy array and show in webapp
+					st.subheader("After converting into numpy array:")
 					single_sample=np.array(feature_list).reshape(1,-1)
+					st.write(single_sample)
 
 					#make a selectbox carring options given below
 					model_choice=st.selectbox("select model",["LR","KNN","DecisionTree"])
 
-					#make button
+					#make button and it returns true when clicked
 					if st.button("predict"):
 						
 						#work if model is KNN
@@ -312,14 +339,27 @@ def main():
 							#show json format in webapp
 							st.json(pred_probability_score)
 						
-						#if st.checkbox("interpret"):
+							workornot=st.checkbox("Interpret")
+							#create checkbox if clicked then return true and following code work	
 							
-						
+							if workornot:
+								st.write(workornot)
+							else:
+								st.warning("checkbox not working")
+					else:
+						st.warning("some error takes place")					
+				
+				else:
+					st.warning("some error takes place")
+									
 			else:
 				
 				#set warning message with text
 				st.warning("Incorrect username/Password")
-				
+		
+		else:
+			st.warning("either you did not login to the system or you did not sign up yet")		
+			
 	elif choice=="signup":
 		
 		#get username from input form
@@ -357,6 +397,11 @@ def main():
 			
 			#show info message
 			st.info("please login to start your session")
+		else:
+			st.warning("submit failed")
+	
+	else:
+		st.warning("wrong choice, please choose again")
 	
 #check if main method
 if __name__=='__main__':
