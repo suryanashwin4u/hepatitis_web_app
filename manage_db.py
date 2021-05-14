@@ -6,12 +6,12 @@ def create_user_table():
     c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT);')
     conn.commit()
 
-def add_user_data(username,password):
-    c.execute('INSERT INTO userstable(username,password) VALUES (?,?);',(username,password))
+def add_user_data(username,hashed_password):
+    c.execute('INSERT INTO userstable(username,password) VALUES (?,?);',(username,hashed_password))
     conn.commit()
 
-def login_user(username,password):
-    c.execute('SELECT * FROM userstable WHERE username=? AND password=?;',(username,password))
+def check_login(username,hashed_password):
+    c.execute('SELECT * FROM userstable WHERE username=? AND password=?;',(username,hashed_password))
     data=c.fetchall()
     return data
     
