@@ -1,6 +1,3 @@
-import streamlit as st
-import pandas as pd
-def main():
 
     st.text('show text function')
     st.markdown('_Markdown_') 
@@ -96,19 +93,15 @@ def main():
     my_chart = st.line_chart(df1)
     my_chart.add_rows(df2)
 
-    # @st.cache
-    # >>> @st.cache
-    # ... def foo(bar):
-    # ...     # Mutate bar
-    # ...     return data
-    # >>> # Executes d1 as first time
-    # >>> d1 = foo(ref1)
-    # >>> # Does not execute d1; returns cached value, d1==d2
-    # >>> d2 = foo(ref1)
-    # >>> # Different arg, so function d1 executes
-    # >>> d3 = foo(ref2)
+    @st.cache
+         @st.cache
+    ... def foo(bar):
+    ...     # Mutate bar
+    ...     return data
+    >>> # Executes d1 as first time
+    >>> d1 = foo(ref1)
+    >>> # Does not execute d1; returns cached value, d1==d2
+    >>> d2 = foo(ref1)
+    >>> # Different arg, so function d1 executes
+    >>> d3 = foo(ref2)
 
-if __name__=='__main__':
-
-	#call main method
-	main()

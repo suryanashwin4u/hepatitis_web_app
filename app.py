@@ -27,6 +27,18 @@ import hashlib
 import lime
 import lime.lime_tabular
 
+import app1
+import app2
+import streamlit as st
+PAGES = {
+    "App1": app1,
+    "App2": app2
+}
+st.sidebar.title('Navigation')
+selection = st.sidebar.radio("Go to", list(PAGES.keys()))
+page = PAGES[selection]
+page.app()
+
 # declaring dictionary
 male_female_dict={"male":1,"female":2}
 yes_no_dict={"yes":1,"no":0}
@@ -65,9 +77,37 @@ def verify_hash_passwords(real_password,hashed_password):
 
 #defination of streamlit webapp
 def main():
+
+	col1, col2, col3 = st.sidebar.beta_columns([1,6,1])
+
+	with col1:
+		st.write("")
+
+	with col2:
+		st.image("ggsipu.png",width=200)
+
+	with col3:
+		st.write("")
+
 	
-	#to show title on the main page
+	col1, col2, col3 = st.beta_columns([6,6,6])
+
+	with col1:
+		st.write("")
+
+	with col2:
+		st.image("ggsipu.png",width=200)
+
+	with col3:
+		st.write("")
+
+	#to show title on the main page and sidebar
+	# st.sidebar.title("Hepatitis Mortality Prediction Web App")
 	st.title("Hepatitis Mortality Prediction Web App")
+
+	# to show image at sidebar and main page
+	# st.sidebar.image('ggsipu.png',width=200)
+	# st.image('ggsipu.png')
 
 	#list menu and submenu for setting options in list
 	menu=["Home", "Login", "Sign-up"]
@@ -80,15 +120,80 @@ def main():
 	#make a selectbox in the sidebar and pass menu list given above to show choices and return choice
 	choice=st.sidebar.selectbox("To get started, Please select from the options given below:",menu)
 	
+	
 	st.sidebar.subheader("Created by:-")
 	st.sidebar.subheader("1.Ashwani Kumar[MCA]")
 	st.sidebar.subheader("2.Nitin Sharma[MCA]")
 	
 	#if choice is home then show subheader and a text below 
 	if choice=="Home":
-		st.subheader("WELCOME TO THE HOMEPAGE")
-		st.text("what is hepatitis disease?")
-	
+		st.header("")
+		st.header("")
+		st.header("")
+		st.header("")
+		st.subheader("")
+		st.subheader("")
+		st.subheader("")
+		st.text("")
+		st.write("")
+		st.image("",width=)
+		st.image("",width=)
+		st.image("",width=)
+		st.video()
+		st.slider('Slide me', min_value=0, max_value=10)
+		st.select_slider('Slide to select', options=[1,'2'])
+		st.progress(progress_variable_1_to_100)
+
+		st.title("Streamlit 101: An in-depth introduction")
+		st.markdown("Welcome to this in-depth introduction to [...].")
+		st.header("Customary quote")
+		st.markdown("> I just love to go home, no matter where I am [...]")
+
+		pics = {
+			"Cat": "https://cdn.pixabay.com/photo/2016/09/24/22/20/cat-1692702_960_720.jpg",
+			"Puppy": "https://cdn.pixabay.com/photo/2019/03/15/19/19/puppy-4057786_960_720.jpg",
+			"Sci-fi city": "https://storage.needpix.com/rsynced_images/science-fiction-2971848_1280.jpg"
+		}
+		pic = st.selectbox("Picture choices", list(pics.keys()), 0)
+		st.image(pics[pic], use_column_width=True, caption=pics[pic])
+
+		st.markdown("## Party time!")
+		st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
+		btn = st.button("Celebrate!")
+		if btn:
+			st.balloons()
+
+		# make toggle expander
+		optionals=st.beta_expander('Expander',False)
+    	optionals.checkbox("")
+		optionals.radio("",["","",""])
+
+		with st.beta_expander('Expand'):
+        	st.write('Juicy deets')
+
+		# add columns
+		name_cols=st.beta_columns(3)
+		name_cols[0].text_inputs("")
+		name_cols[1].text_inputs("")
+		name_cols[2].text_inputs("")
+
+		create colums
+    	col1, col2 = st.beta_columns(2)
+    	col1.subheader('Columnisation')
+		col2.text("")
+
+		#create bold,italic,hyperlink,horizontal
+		st.markdown("helloworld__bold__helloworld_italic__*both*__")
+		st.markdown("google:[google](https://www.google.com)")
+		st.markdown("___")
+
+		#container 
+		container=st.beta_container()
+		container.write()
+		container.write()
+
+
+
 	#if choice is login then show 2 inputs for username and password and get data from the login form
 	elif choice=="Login":
 	
@@ -98,7 +203,7 @@ def main():
   
   
 		#make a checkbox in sidebar and if user clicks on checkbox and password is same then pass
-		if st.checkbox("login"):
+		if st.button('Login'):
 			
 			#create a user table in the database
 			create_user_table()
@@ -366,7 +471,7 @@ def main():
 			st.warning("password did not matched")
 		
 		#show submit button
-		if st.button("submit"):
+		if st.button("Sign up"):
 		
 			#cal function in manage_db file
 			create_user_table()
