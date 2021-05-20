@@ -24,20 +24,20 @@ from manage_db import *
 import hashlib
 
 # ??
-import lime
-import lime.lime_tabular
+# import lime
+# import lime.lime_tabular
 
-import app1
-import app2
-import streamlit as st
-PAGES = {
-    "App1": app1,
-    "App2": app2
-}
-st.sidebar.title('Navigation')
-selection = st.sidebar.radio("Go to", list(PAGES.keys()))
-page = PAGES[selection]
-page.app()
+# import app1
+# import app2
+# import streamlit as st
+# PAGES = {
+#     "App1": app1,
+#     "App2": app2
+# }
+# st.sidebar.title('Navigation')
+# selection = st.sidebar.radio("Go to", list(PAGES.keys()))
+# page = PAGES[selection]
+# page.app()
 
 # declaring dictionary
 male_female_dict={"male":1,"female":2}
@@ -84,7 +84,7 @@ def main():
 		st.write("")
 
 	with col2:
-		st.image("ggsipu.png",width=200)
+		st.image("img/ggsipu.png",width=200)
 
 	with col3:
 		st.write("")
@@ -96,7 +96,7 @@ def main():
 		st.write("")
 
 	with col2:
-		st.image("ggsipu.png",width=200)
+		st.image("img/ggsipu.png",width=200)
 
 	with col3:
 		st.write("")
@@ -127,70 +127,70 @@ def main():
 	
 	#if choice is home then show subheader and a text below 
 	if choice=="Home":
-		st.header("")
-		st.header("")
-		st.header("")
-		st.header("")
-		st.subheader("")
-		st.subheader("")
-		st.subheader("")
-		st.text("")
-		st.write("")
-		st.image("",width=)
-		st.image("",width=)
-		st.image("",width=)
-		st.video()
-		st.slider('Slide me', min_value=0, max_value=10)
-		st.select_slider('Slide to select', options=[1,'2'])
-		st.progress(progress_variable_1_to_100)
+		# st.header("")
+		# st.header("")
+		# st.header("")
+		# st.header("")
+		# st.subheader("")
+		# st.subheader("")
+		# st.subheader("")
+		# st.text("")
+		# st.write("")
+		# st.image("",width=)
+		# st.image("",width=)
+		# st.image("",width=)
+		# st.video()
+		# st.slider('Slide me', min_value=0, max_value=10)
+		# st.select_slider('Slide to select', options=[1,'2'])
+		# st.progress(progress_variable_1_to_100)
 
-		st.title("Streamlit 101: An in-depth introduction")
-		st.markdown("Welcome to this in-depth introduction to [...].")
-		st.header("Customary quote")
-		st.markdown("> I just love to go home, no matter where I am [...]")
+		# st.title("Streamlit 101: An in-depth introduction")
+		# st.markdown("Welcome to this in-depth introduction to [...].")
+		# st.header("Customary quote")
+		# st.markdown("> I just love to go home, no matter where I am [...]")
 
-		pics = {
-			"Cat": "https://cdn.pixabay.com/photo/2016/09/24/22/20/cat-1692702_960_720.jpg",
-			"Puppy": "https://cdn.pixabay.com/photo/2019/03/15/19/19/puppy-4057786_960_720.jpg",
-			"Sci-fi city": "https://storage.needpix.com/rsynced_images/science-fiction-2971848_1280.jpg"
-		}
-		pic = st.selectbox("Picture choices", list(pics.keys()), 0)
-		st.image(pics[pic], use_column_width=True, caption=pics[pic])
+		# pics = {
+		# 	"Cat": "https://cdn.pixabay.com/photo/2016/09/24/22/20/cat-1692702_960_720.jpg",
+		# 	"Puppy": "https://cdn.pixabay.com/photo/2019/03/15/19/19/puppy-4057786_960_720.jpg",
+		# 	"Sci-fi city": "https://storage.needpix.com/rsynced_images/science-fiction-2971848_1280.jpg"
+		# }
+		# pic = st.selectbox("Picture choices", list(pics.keys()), 0)
+		# st.image(pics[pic], use_column_width=True, caption=pics[pic])
 
-		st.markdown("## Party time!")
-		st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
-		btn = st.button("Celebrate!")
-		if btn:
-			st.balloons()
+		# st.markdown("## Party time!")
+		# st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
+		# btn = st.button("Celebrate!")
+		# if btn:
+		# 	st.balloons()
 
-		# make toggle expander
-		optionals=st.beta_expander('Expander',False)
-    	optionals.checkbox("")
-		optionals.radio("",["","",""])
+		# # make toggle expander
+		# optionals=st.beta_expander('Expander',False)
+		# optionals.checkbox("")
+		# optionals.radio("",["","",""])
 
-		with st.beta_expander('Expand'):
-        	st.write('Juicy deets')
+		# with st.beta_expander('Expand'):
+		# 	st.write('Juicy deets')
 
-		# add columns
-		name_cols=st.beta_columns(3)
-		name_cols[0].text_inputs("")
-		name_cols[1].text_inputs("")
-		name_cols[2].text_inputs("")
+		# # add columns
+		# name_cols=st.beta_columns(3)
+		# name_cols[0].text_inputs("")
+		# name_cols[1].text_inputs("")
+		# name_cols[2].text_inputs("")
 
-		create colums
-    	col1, col2 = st.beta_columns(2)
-    	col1.subheader('Columnisation')
-		col2.text("")
+		# create colums
+		# col1, col2 = st.beta_columns(2)
+		# col1.subheader('Columnisation')
+		# col2.text("")
 
-		#create bold,italic,hyperlink,horizontal
-		st.markdown("helloworld__bold__helloworld_italic__*both*__")
-		st.markdown("google:[google](https://www.google.com)")
-		st.markdown("___")
+		# #create bold,italic,hyperlink,horizontal
+		# st.markdown("helloworld__bold__helloworld_italic__*both*__")
+		# st.markdown("google:[google](https://www.google.com)")
+		# st.markdown("___")
 
-		#container 
-		container=st.beta_container()
-		container.write()
-		container.write()
+		# #container 
+		# container=st.beta_container()
+		# container.write()
+		# container.write()
 
 
 
