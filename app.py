@@ -57,7 +57,7 @@ def get_yes_no_value(yes_no_val):
 	for key,value in yes_no_dict.items():
 		if yes_no_val==key:
 			return value
-			
+
 
 # load machine learning models from folder in read binary mode
 def loading_ML_model(model_file_name):
@@ -73,7 +73,7 @@ def verify_hash_passwords(real_password,hashed_password):
 	if generate_hash_passwords(real_password) == hashed_password:
 		return hashed_password
 	return False
-	
+
 
 #defination of streamlit webapp
 def main():
@@ -89,7 +89,7 @@ def main():
 	with col3:
 		st.write("")
 
-	
+
 	col1, col2, col3 = st.beta_columns([6,6,6])
 
 	with col1:
@@ -119,14 +119,15 @@ def main():
 
 	#make a selectbox in the sidebar and pass menu list given above to show choices and return choice
 	choice=st.sidebar.selectbox("To get started, Please select from the options given below:",menu)
-	
-	
+
+
 	st.sidebar.subheader("Created by:-")
 	st.sidebar.subheader("1.Ashwani Kumar[MCA]")
 	st.sidebar.subheader("2.Nitin Sharma[MCA]")
-	
+
 	#if choice is home then show subheader and a text below 
 	if choice=="Home":
+		pass
 		# st.header("")
 		# st.header("")
 		# st.header("")
@@ -196,145 +197,144 @@ def main():
 
 	#if choice is login then show 2 inputs for username and password and get data from the login form
 	elif choice=="Login":
-	
 		#get username and password from the form
 		username=st.text_input("Username")
 		real_password=st.text_input("Password",type='password')
-  
-  
+
+
 		#make a checkbox in sidebar and if user clicks on checkbox and password is same then pass
 		if st.button('Login'):
-			
+
 			#create a user table in the database
 			create_user_table()
-			
+
 			#generate hashed password and assign
 			hashed_password=generate_hash_passwords(real_password)
-			
+
 			#call login_user function pass username and returned value of verify_hash_passwords function
 			result=check_login(username,verify_hash_passwords(real_password,hashed_password))
-			
-			
+
+
 			if result:
-				
+
 				#show success message when login succeed
 				st.success("welcome {}".format(username))
-				
-				
+
+
 				#show text and select box with options from the list of submenu given menu
 				activity=st.selectbox("please select from the options given below",submenu)
-				
-				
+
+
 				if activity=="plot":
-				
+
 					#show subheader text
 					st.subheader("show csv file as dataframe")
-					
+
 					# read csv file from the folder and convert into pandas dataframe
 					df=pd.read_csv("data/clean_hepatitis_dataset.csv")
-					
+
 					#show dataframe in webapp
 					st.dataframe(df)
-					
+
 					# take class column from dataframe then count the number of values and plot bargraph
 					df['class'].value_counts().plot(kind='bar')
 
-					
+
 					#show pyplot in webapp
 					st.pyplot()
-				
+
 
 					# read csv file and covert into datafram
 					freq_df=pd.read_csv("data/freq_df_hepatitis_dataset.csv")
-					
+
 					#show bar chart in web app having column name count
 					st.bar_chart(freq_df['count'])
 
 
 					# make a checkbox carry text
 					if st.checkbox("area chart"):
-						
+
 						#change dataframe columns into list 
 						all_columns=df.columns.to_list()
-						
+
 						#make a multiselector and pass list given above as argument
 						feat_choices=st.multiselect("choose a feature",all_columns)
-						
+
 						#make a new list after getting values from the columns selected above
 						new_df=df[feat_choices]
-						
+
 						#make an area chart using list values from above
 						st.area_chart(new_df)
-					
+
 
 				elif activity=="prediction":
-				
+
 					#show a subheader with text
 					st.subheader("predictive Analytics")
 
 
 					#set range in input box
 					age=st.number_input("age",7,80)
-					
-					
+
+
 					#show radio buttons having options given in male_female_dict dictionary above
 					sex=st.radio("sex",tuple(male_female_dict.keys()))
-					
-					
-					
+
+
+
 					#show radio buttons having options given in yes_no_dict above
 					steroid=st.radio("Do you take steroid?",tuple(yes_no_dict.keys()))
-					
-					
+
+
 					#show radio buttons having options given in yes_no_dict above
 					antivirals=st.radio("Do you take Antivirals?",tuple(yes_no_dict.keys()))
-					
-					
+
+
 					#show radio buttons having options given in yes_no_dict above
 					fatigue=st.radio("Do you take fatigue?",tuple(yes_no_dict.keys()))
-					
-					
+
+
 					#show radio buttons having options given in yes_no_dict above
 					spiders=st.radio("Presence of spider naevi",tuple(yes_no_dict.keys()))
-					
-					
+
+
 					#show select box having options given in yes_no_dict above 
 					ascites=st.selectbox("Ascites",tuple(yes_no_dict.keys()))
-					
-					
+
+
 					#show select box having options given in yes_no_dict above 
 					varices=st.selectbox("presence of varices",tuple(yes_no_dict.keys()))
-					
-					
+
+
 					#show range input
 					bilirubin=st.number_input("bilirubin content",0.0,8.0)
-					
-					
+
+
 					#show range input
 					alk_phosphate=st.number_input("alkaline phosphate content",0.0,296.0)
-					
-					
+
+
 					#show range input
 					sgot=st.number_input("Sgot",0.0,648.0)
-					
-					
+
+
 					#show range input
 					albumin=st.number_input("albumin",0.0,6.4)
-					
-					
+
+
 					#show range input
 					Prothrombin=st.number_input("Prothrombin",0.0,100.0)
-					
-					
+
+
 					#show select box having options given in yes_no_dict
 					histology=st.selectbox("Histology",tuple(yes_no_dict.keys()))
-					
+
 
 					#making a list of features using functions
 					st.subheader("showing list of values returned from above input form")
 					feature_list = [age,get_sex_value(sex),get_yes_no_value(steroid),get_yes_no_value(antivirals),get_yes_no_value(fatigue),get_yes_no_value(spiders),get_yes_no_value(ascites),get_yes_no_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_yes_no_value(histology)]
 					st.write(feature_list)
-					
+
 
 					#dictionary of list
 					st.subheader("showing in json format after conversion from dictionary")
@@ -351,69 +351,68 @@ def main():
 
 					#make button and it returns true when clicked
 					if st.button("predict"):
-						
+
 						#work if model is KNN
 						if model_choice=="KNN":
-							
+
 							#load model file from models folder
 							loaded_model_ML=loading_ML_model("./models/knn_hepB_model.pkl")
-							
+
 							#predict from loaded model and store
 							prediction=loaded_model_ML.predict(single_sample)
-							
+
 							#predict probability from loaded model and store
 							pred_prob=loaded_model_ML.predict_proba(single_sample)
-						
+
 						#work if model is DecisionTree
 						elif model_choice=="DecisionTree":						
-							
+
 							loaded_model_ML=loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
-							
+
 							prediction=loaded_model_ML.predict(single_sample)
-							
+
 							pred_prob=loaded_model_ML.predict_proba(single_sample)
-							
+
 						#work if model is LR
 						else:
-						
+
 							loaded_model_ML=loading_ML_model("models/logistic_regression_hepB_model.pkl")
-							
+
 							prediction=loaded_model_ML.predict(single_sample)
-							
+
 							pred_prob=loaded_model_ML.predict_proba(single_sample)
-						
-						
-						
+
+
+
 						#if prediction came from above is 1 then patient dies
 						if prediction==1:
-							
+
 							#show warning message
 							st.warning("Patient dies")
-							
+
 						else:
-						
+
 							#show success message
 							st.success("Patient lives")
-							
+
 							#make a dictionary to store percentage of living or die
 							pred_probability_score={"Die":pred_prob[0][0]*100,"Live":pred_prob[0][1]*100}
-							
+
 							#show a subheader
 							st.subheader("Prediction probability score using {}".format(model_choice))
-							
+
 							#show json format in webapp
 							st.json(pred_probability_score)
-						
-					if st.checkbox("Interpret"):
-						if model_choice == "KNN":
-							loaded_model_ML = loading_ML_model("models/knn_hepB_model.pkl")
-							
-						elif model_choice == "DecisionTree":
-							loaded_model_ML = loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
-							
-						else:
-							loaded_model_ML = loading_ML_model("models/logistic_regression_hepB_model.pkl")
-							
+
+						if st.checkbox("Interpret"):
+							if model_choice == "KNN":
+								loaded_model_ML = loading_ML_model("models/knn_hepB_model.pkl")
+
+							elif model_choice == "DecisionTree":
+								loaded_model_ML = loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
+
+							else:
+								loaded_model_ML = loading_ML_model("models/logistic_regression_hepB_model.pkl")
 
 							# loaded_model_ML = loading_ML_model("models/logistic_regression_model.pkl")							
 							# 1 Die and 2 Live
@@ -436,63 +435,63 @@ def main():
 							plt.figure(figsize=(20,10))
 							fig = exp.as_pyplot_figure()
 							st.pyplot()
+						else:
+							st.warning("some error takes place")					
+
 					else:
-						st.warning("some error takes place")					
-				
+						st.warning("some error takes place")
+
 				else:
-					st.warning("some error takes place")
-									
+
+					#set warning message with text
+					st.warning("Incorrect username/Password")
+
 			else:
-				
-				#set warning message with text
-				st.warning("Incorrect username/Password")
-		
-		else:
-			st.warning("either you did not login to the system or you did not sign up yet")		
-			
+				st.warning("either you did not login to the system or you did not sign up yet")		
+
 	elif choice=="Sign-up":
-		
+
 		#get username from input form
 		new_username=st.text_input("username")
-		
+
 		#get password and confirm password from input form
 		new_password=st.text_input("password",type='password')
 		confirm_password=st.text_input("confirm password",type='password')
-		
+
 		#if password and confirm password same
 		if new_password==confirm_password:
-		
+
 			#show success message if both password same
 			st.success("password is matched")
-			
+
 		else:
-		
+
 			#show warning message if password not matched
 			st.warning("password did not matched")
-		
+
 		#show submit button
 		if st.button("Sign up"):
-		
+
 			#cal function in manage_db file
 			create_user_table()
-			
+
 			#call generate hashes function and return hashed password
 			hashed_new_password=generate_hash_passwords(new_password)
-			
+
 			#call adduserdata function in manage_db file
 			add_user_data(new_username,hashed_new_password)
-			
+
 			#show success message 
 			st.success("you have successfully created a new account")
-			
+
 			#show info message
 			st.info("please login to start your session")
 		else:
 			st.warning("submit failed")
-	
+
 	else:
 		st.warning("wrong choice, please choose again")
-	
+
 #check if main method
 if __name__=='__main__':
 
