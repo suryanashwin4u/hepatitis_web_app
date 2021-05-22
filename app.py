@@ -11,7 +11,7 @@ import numpy as np
 import os
 
 # python package for load machine learning models from the folders
-import joblib
+# import joblib
 
 # python package to plot graphs
 import matplotlib.pyplot as plt
@@ -61,7 +61,7 @@ def get_yes_no_value(yes_no_val):
 
 # load machine learning models from folder in read binary mode
 def loading_ML_model(model_file_name):
-	loaded_model_ML=joblib.load(open(os.path.join(model_file_name),"rb"))
+	# loaded_model_ML=joblib.load(open(os.path.join(model_file_name),"rb"))
 	return loaded_model_ML
 
 # to generate secure hashed password so that database admin wont know your password
@@ -253,21 +253,27 @@ def main():
 
 					#show bar chart in web app having column name count
 					st.bar_chart(freq_dataframe['count'])
-
-
+     
+     
+#  *********************************bug portion resolved******************************************
 					#make a multiselector and pass list column names as arguments for options list
-					feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),pd_dataframe.columns.to_list())
+					# feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),pd_dataframe.columns.to_list())
+					columns_names=pd_dataframe.columns.to_list()
 
 					#make a new list after getting values from the columns selected above
-					new_column_dataframe=pd_dataframe[feature_selected]
+					new_column_dataframe=pd_dataframe[columns_names]
 	
 					#show dataframe in webapp
-					st.dataframe(new_column_dataframe)
-
+					# st.dataframe(new_column_dataframe)
+					# st.dataframe(feature_selected)
+    
 					#make an area chart using list values from above
-					st.area_chart(new_column_dataframe)
-	
+					st.header("showing a frequency graph of all the columns in the dataframe".upper())
 					
+					st.area_chart(new_column_dataframe)
+					# st.area_chart(feature_selected)
+	
+#  ******************************bug portion resolved ending*****************************************					
 					
 				elif activity_selected=="Check-Prediction":
 
