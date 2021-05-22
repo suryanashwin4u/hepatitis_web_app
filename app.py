@@ -65,39 +65,34 @@ def loading_ML_model(model_file_name):
 	return loaded_model_ML
 
 # to generate secure hashed password so that database admin wont know your password
-def generate_hash_passwords(password):
-	return hashlib.sha256(str.encode(password)).hexdigest()
+def generate_hash_passwords(get_password):
+	return hashlib.sha256(str.encode(get_password)).hexdigest()
 
-# to verify whether password is same or not
-def verify_hash_passwords(real_password,hashed_password):
-	if generate_hash_passwords(real_password) == hashed_password:
+# to verify whether get_password and hashed password is same or not
+def verify_hash_passwords(get_password,hashed_password):
+	if generate_hash_passwords(get_password) == hashed_password:
 		return hashed_password
 	return False
 
 
-#defination of streamlit webapp
+#execution starts here
 def main():
-
+	
+ 	# set images in middle at the sidebar
 	col1, col2, col3 = st.sidebar.beta_columns([1,6,1])
-
 	with col1:
 		st.write("")
-
 	with col2:
 		st.image("img/ggsipu.png",width=200)
-
 	with col3:
 		st.write("")
 
-
+	# set images in middle at the homepage
 	col1, col2, col3 = st.beta_columns([6,6,6])
-
 	with col1:
 		st.write("")
-
 	with col2:
 		st.image("img/ggsipu.png",width=200)
-
 	with col3:
 		st.write("")
 
@@ -109,24 +104,25 @@ def main():
 	# st.sidebar.image('ggsipu.png',width=200)
 	# st.image('ggsipu.png')
 
-	#list menu and submenu for setting options in list
-	menu=["Home", "Login", "Sign-up"]
-	submenu=["Plot","Prediction"]
+	#list menu and submenu for setting options in the list
+	sidebar_menu=["Home-Page", "Login-Form", "Sign-up-Form"]
+	homepage_menu=["Check-Plot","Check-Prediction"]
 
 	#sidebar subheader
 	st.sidebar.subheader("Hello, Good Morning Users")
 	st.sidebar.subheader("Welcome to the Hepatitis Mortality Prediction Web App created using streamlit in python")
 
 	#make a selectbox in the sidebar and pass menu list given above to show choices and return choice
-	choice=st.sidebar.selectbox("To get started, Please select from the options given below:",menu)
+	menu_selected=st.sidebar.selectbox("To get started, Please select from the options given below:",sidebar_menu)
 
 
 	st.sidebar.subheader("Created by:-")
 	st.sidebar.subheader("1.Ashwani Kumar[MCA]")
 	st.sidebar.subheader("2.Nitin Sharma[MCA]")
 
+
 	#if choice is home then show subheader and a text below 
-	if choice=="Home":
+	if menu_selected=="Home-Page":
 		pass
 		# st.header("")
 		# st.header("")
@@ -196,161 +192,165 @@ def main():
 
 
 	#if choice is login then show 2 inputs for username and password and get data from the login form
-	elif choice=="Login":
-		#get username and password from the form
-		username=st.text_input("Username")
-		real_password=st.text_input("Password",type='password')
+	elif menu_selected=="Login-Form":
+		
+  		#get username and password from the form
+		get_username=st.text_input("Username")
+		get_password=st.text_input("Password",type='password')
 
+		#set login button
+		if_clicked=st.button('Login')
 
-		#make a checkbox in sidebar and if user clicks on checkbox and password is same then pass
-		if st.button('Login'):
+		# if login button is clicked then it returns true and following code executes
+		if if_clicked:
 
 			#create a user table in the database
-			create_user_table()
+			create_table_db()
 
-			#generate hashed password and assign
-			hashed_password=generate_hash_passwords(real_password)
+			#generate hashed password
+			hashed_password=generate_hash_passwords(get_password)
 
-			#call login_user function pass username and returned value of verify_hash_passwords function
-			result=check_login(username,verify_hash_passwords(real_password,hashed_password))
+			#returns true if user already exists else false
+			login_check=check_login(get_username,hashed_password)
 
 
-			if result:
+			if login_check:
 
 				#show success message when login succeed
-				st.success("welcome {}".format(username))
+				st.success("welcome {}".format(get_username))
 
 
 				#show text and select box with options from the list of submenu given menu
-				activity=st.selectbox("please select from the options given below",submenu)
+				activity_selected=st.selectbox("please select from the options given below",homepage_menu)
 
-
-				if activity=="plot":
+				# if checkplot activity selected from options then following code executes
+				if activity_selected=="Check-Plot":
 
 					#show subheader text
-					st.subheader("show csv file as dataframe")
+					st.subheader("showing csv file as dataframe which is used for getting data".upper())
 
 					# read csv file from the folder and convert into pandas dataframe
-					df=pd.read_csv("data/clean_hepatitis_dataset.csv")
+					pd_dataframe=pd.read_csv("data/clean_hepatitis_dataset.csv")
 
 					#show dataframe in webapp
-					st.dataframe(df)
+					st.dataframe(pd_dataframe)
 
 					# take class column from dataframe then count the number of values and plot bargraph
-					df['class'].value_counts().plot(kind='bar')
+					pd_dataframe['class'].value_counts().plot(kind='bar')
 
-
+					#show subheader text
+					st.subheader("showing bar graph for the number of patients belongs to class 1 and 2".upper())
+     
 					#show pyplot in webapp
 					st.pyplot()
 
 
-					# read csv file and covert into datafram
-					freq_df=pd.read_csv("data/freq_df_hepatitis_dataset.csv")
+					# read csv file and convert into dataframe
+					freq_dataframe=pd.read_csv("data/freq_df_hepatitis_dataset.csv")
+     
+					#show subheader text
+					st.subheader("showing bar chart for count vs age(0-150 years)".upper())
 
 					#show bar chart in web app having column name count
-					st.bar_chart(freq_df['count'])
+					st.bar_chart(freq_dataframe['count'])
 
 
-					# make a checkbox carry text
-					if st.checkbox("area chart"):
+					#make a multiselector and pass list column names as arguments for options list
+					feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),pd_dataframe.columns.to_list())
 
-						#change dataframe columns into list 
-						all_columns=df.columns.to_list()
+					#make a new list after getting values from the columns selected above
+					new_column_dataframe=pd_dataframe[feature_selected]
+	
+					#show dataframe in webapp
+					st.dataframe(new_column_dataframe)
 
-						#make a multiselector and pass list given above as argument
-						feat_choices=st.multiselect("choose a feature",all_columns)
-
-						#make a new list after getting values from the columns selected above
-						new_df=df[feat_choices]
-
-						#make an area chart using list values from above
-						st.area_chart(new_df)
-
-
-				elif activity=="prediction":
+					#make an area chart using list values from above
+					st.area_chart(new_column_dataframe)
+	
+					
+					
+				elif activity_selected=="Check-Prediction":
 
 					#show a subheader with text
-					st.subheader("predictive Analytics")
-
+					st.subheader("Prediction Analytics, here you can input your dygnostic details to get prediction".upper())
 
 					#set range in input box
-					age=st.number_input("age",7,80)
-
+					age=st.number_input("age".upper(),7,80)
 
 					#show radio buttons having options given in male_female_dict dictionary above
-					sex=st.radio("sex",tuple(male_female_dict.keys()))
+					sex=st.radio("sex".upper(),tuple(male_female_dict.keys()))
 
 
 
 					#show radio buttons having options given in yes_no_dict above
-					steroid=st.radio("Do you take steroid?",tuple(yes_no_dict.keys()))
+					steroid=st.radio("Do you take steroid?".upper(),tuple(yes_no_dict.keys()))
 
 
 					#show radio buttons having options given in yes_no_dict above
-					antivirals=st.radio("Do you take Antivirals?",tuple(yes_no_dict.keys()))
+					antivirals=st.radio("Do you take Antivirals?".upper(),tuple(yes_no_dict.keys()))
 
 
 					#show radio buttons having options given in yes_no_dict above
-					fatigue=st.radio("Do you take fatigue?",tuple(yes_no_dict.keys()))
+					fatigue=st.radio("Do you have fatigue?".upper(),tuple(yes_no_dict.keys()))
 
 
 					#show radio buttons having options given in yes_no_dict above
-					spiders=st.radio("Presence of spider naevi",tuple(yes_no_dict.keys()))
+					spiders=st.radio("Presence of spider naevi".upper(),tuple(yes_no_dict.keys()))
 
 
 					#show select box having options given in yes_no_dict above 
-					ascites=st.selectbox("Ascites",tuple(yes_no_dict.keys()))
+					ascites=st.selectbox("Ascites".upper(),tuple(yes_no_dict.keys()))
 
 
 					#show select box having options given in yes_no_dict above 
-					varices=st.selectbox("presence of varices",tuple(yes_no_dict.keys()))
+					varices=st.selectbox("presence of varices".upper(),tuple(yes_no_dict.keys()))
 
 
 					#show range input
-					bilirubin=st.number_input("bilirubin content",0.0,8.0)
+					bilirubin=st.number_input("bilirubin content".upper(),0.0,8.0)
 
 
 					#show range input
-					alk_phosphate=st.number_input("alkaline phosphate content",0.0,296.0)
+					alk_phosphate=st.number_input("alkaline phosphate content".upper(),0.0,296.0)
 
 
 					#show range input
-					sgot=st.number_input("Sgot",0.0,648.0)
+					sgot=st.number_input("Sgot".upper(),0.0,648.0)
 
 
 					#show range input
-					albumin=st.number_input("albumin",0.0,6.4)
+					albumin=st.number_input("albumin".upper(),0.0,6.4)
 
 
 					#show range input
-					Prothrombin=st.number_input("Prothrombin",0.0,100.0)
+					Prothrombin=st.number_input("Prothrombin".upper(),0.0,100.0)
 
 
 					#show select box having options given in yes_no_dict
-					histology=st.selectbox("Histology",tuple(yes_no_dict.keys()))
+					histology=st.selectbox("Histology".upper(),tuple(yes_no_dict.keys()))
 
 
 					#making a list of features using functions
-					st.subheader("showing list of values returned from above input form")
+					st.subheader("showing list of values returned from above input form".upper())
 					feature_list = [age,get_sex_value(sex),get_yes_no_value(steroid),get_yes_no_value(antivirals),get_yes_no_value(fatigue),get_yes_no_value(spiders),get_yes_no_value(ascites),get_yes_no_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_yes_no_value(histology)]
 					st.write(feature_list)
 
 
 					#dictionary of list
-					st.subheader("showing in json format after conversion from dictionary")
+					st.subheader("showing in json format after conversion from dictionary".upper())
 					st.json({"age":age,"sex":sex,"steroid":steroid,"antivirals":antivirals,"spiders":spiders,"ascites":ascites,"varices":varices,"bilirubin":bilirubin,"alk_phosphate":alk_phosphate,"sgot":sgot,"albumin":albumin,"Prothrombin":Prothrombin,"histology":histology})
 
 
 					#convert into numpy array and show in webapp
-					st.subheader("After converting into numpy array:")
+					st.subheader("After converting into numpy array:".upper())
 					single_sample=np.array(feature_list).reshape(1,-1)
 					st.write(single_sample)
 
 					#make a selectbox carring options given below
-					model_choice=st.selectbox("select model",["LR","KNN","DecisionTree"])
+					model_choice=st.selectbox("select model".upper(),["LR","KNN","DecisionTree"])
 
 					#make button and it returns true when clicked
-					if st.button("predict"):
+					if st.button("predict".upper()):
 
 						#work if model is KNN
 						if model_choice=="KNN":
@@ -388,23 +388,23 @@ def main():
 						if prediction==1:
 
 							#show warning message
-							st.warning("Patient dies")
+							st.warning("Patient dies".upper())
 
 						else:
 
 							#show success message
-							st.success("Patient lives")
+							st.success("Patient lives".upper())
 
 							#make a dictionary to store percentage of living or die
 							pred_probability_score={"Die":pred_prob[0][0]*100,"Live":pred_prob[0][1]*100}
 
 							#show a subheader
-							st.subheader("Prediction probability score using {}".format(model_choice))
+							st.subheader("Prediction probability score using {}".upper().format(model_choice))
 
 							#show json format in webapp
 							st.json(pred_probability_score)
 
-						if st.checkbox("Interpret"):
+						if st.checkbox("Interpret".upper()):
 							if model_choice == "KNN":
 								loaded_model_ML = loading_ML_model("models/knn_hepB_model.pkl")
 
@@ -436,61 +436,73 @@ def main():
 							fig = exp.as_pyplot_figure()
 							st.pyplot()
 						else:
-							st.warning("some error takes place")					
+							st.warning("some error takes place".upper())					
 
 					else:
-						st.warning("some error takes place")
+						st.warning("some error takes place".upper())
 
 				else:
 
 					#set warning message with text
-					st.warning("Incorrect username/Password")
+					st.warning("Incorrect username/Password".upper())
 
 			else:
-				st.warning("either you did not login to the system or you did not sign up yet")		
+				st.warning("either you did not login to the system or you did not sign up yet".upper())		
 
-	elif choice=="Sign-up":
+	elif menu_selected=="Sign-up-Form":
 
-		#get username from input form
-		new_username=st.text_input("username")
+		#get username from input box
+		new_username=st.text_input("username".upper())
 
-		#get password and confirm password from input form
-		new_password=st.text_input("password",type='password')
-		confirm_password=st.text_input("confirm password",type='password')
+		#get password from input box
+		new_password=st.text_input("password".upper(),type='password')
+	
+		#get confirm password from input box
+		confirm_password=st.text_input("confirm password".upper(),type='password')
 
 		#if password and confirm password same
-		if new_password==confirm_password:
+		if new_password==confirm_password and new_password!='' and confirm_password!='':
 
 			#show success message if both password same
-			st.success("password is matched")
+			st.success("password completely matched".upper())
 
+		elif new_password=='' or confirm_password=='' :
+
+			#show warning message if password not matched
+			st.warning("either password box or confirm password box is empty, please fill before going ahead".upper())
+   
 		else:
 
 			#show warning message if password not matched
-			st.warning("password did not matched")
+			st.warning("password and confirm password did not matched".upper())
 
 		#show submit button
-		if st.button("Sign up"):
+		if st.button("Sign up".upper()):
 
 			#cal function in manage_db file
-			create_user_table()
+			create_table_db()
 
 			#call generate hashes function and return hashed password
 			hashed_new_password=generate_hash_passwords(new_password)
 
 			#call adduserdata function in manage_db file
-			add_user_data(new_username,hashed_new_password)
+			warning_if_any=add_user_db(new_username,hashed_new_password)
+   
+			if warning_if_any:
+				st.warning(warning_if_any.upper())
+				
+			else:
+				#show success message 
+				st.success("new account has been created".upper())
 
-			#show success message 
-			st.success("you have successfully created a new account")
-
-			#show info message
-			st.info("please login to start your session")
+				#show info message
+				st.info("please choose login-form option from sidebar to login and start your session".upper())
+   
 		else:
-			st.warning("submit failed")
+			st.warning("either you did not click sign up button or some failure occurs".upper())
 
 	else:
-		st.warning("wrong choice, please choose again")
+		st.warning("wrong choice, please choose again".upper())
 
 #check if main method
 if __name__=='__main__':
