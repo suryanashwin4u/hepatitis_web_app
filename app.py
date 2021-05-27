@@ -275,7 +275,8 @@ def main():
 	
 #  ******************************bug portion resolved ending*****************************************					
 					
-				elif activity_selected=="Check-Prediction":
+				# elif activity_selected=="Check-Prediction":
+				else:
 
 					#show a subheader with text
 					st.subheader("Prediction Analytics, here you can input your dygnostic details to get prediction".upper())
@@ -447,10 +448,10 @@ def main():
 					else:
 						st.warning("some error takes place".upper())
 
-				else:
+				# else:
 
-					#set warning message with text
-					st.warning("Incorrect username/Password".upper())
+				# 	#set warning message with text
+				# 	st.warning("Incorrect username/Password".upper())
 
 			else:
 				st.warning("either you did not login to the system or you did not sign up yet".upper())		
