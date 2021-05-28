@@ -190,11 +190,11 @@ def main():
 	elif menu_selected=="3.Login-Form":
 		
   		#get username and password from the form
-		get_username=st.sidebar.text_input("Username")
-		get_password=st.sidebar.text_input("Password",type='password')
+		get_username=st.text_input("Username")
+		get_password=st.text_input("Password",type='password')
 
 		#set login button
-		if_clicked=st.sidebar.button('Login')
+		if_clicked=st.button('Login')
 
 		# if login button is clicked then it returns true and following code executes
 		if if_clicked:
