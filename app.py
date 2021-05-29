@@ -122,9 +122,6 @@ def main():
 		st.subheader("1.Name: Ashwani Kumar  [MCA],  Roll no: 40216404518")
 		st.subheader("2.Name: Nitin Sharma   [MCA],  Roll no: 40916404518")
 
-	
-
-
 	#if choice is home then show subheader and a text below 
 	elif menu_selected=="2.Home-Page":
 		st.image("./img/liver.jpg",width=700)
