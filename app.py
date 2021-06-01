@@ -143,60 +143,6 @@ def main():
 		st.header("Can hepatitis be prevented?".upper())		
 		st.subheader("There are different ways to prevent or lower your risk for hepatitis, depending on the type of hepatitis. For example, not drinking too much alcohol can prevent alcoholic hepatitis. There are vaccines to prevent hepatitis A and B. Autoimmune hepatitis cannot be prevented.")
 		st.image("./img/Top-banner-april-2020-2.png",width=700)
-		
-		# st.slider('Slide me', min_value=0, max_value=10)
-		# st.select_slider('Slide to select', options=[1,'2'])
-		# st.progress(progress_variable_1_to_100)
-
-		# st.title("Streamlit 101: An in-depth introduction")
-		# st.markdown("Welcome to this in-depth introduction to [...].")
-		# st.header("Customary quote")
-		# st.markdown("> I just love to go home, no matter where I am [...]")
-
-		# pics = {
-		# 	"Cat": "https://cdn.pixabay.com/photo/2016/09/24/22/20/cat-1692702_960_720.jpg",
-		# 	"Puppy": "https://cdn.pixabay.com/photo/2019/03/15/19/19/puppy-4057786_960_720.jpg",
-		# 	"Sci-fi city": "https://storage.needpix.com/rsynced_images/science-fiction-2971848_1280.jpg"
-		# }
-		# pic = st.selectbox("Picture choices", list(pics.keys()), 0)
-		# st.image(pics[pic], use_column_width=True, caption=pics[pic])
-
-		# st.markdown("## Party time!")
-		# st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
-		# btn = st.button("Celebrate!")
-		# if btn:
-		# 	st.balloons()
-
-		# # make toggle expander
-		# optionals=st.beta_expander('Expander',False)
-		# optionals.checkbox("")
-		# optionals.radio("",["","",""])
-
-		# with st.beta_expander('Expand'):
-		# 	st.write('Juicy deets')
-
-		# # add columns
-		# name_cols=st.beta_columns(3)
-		# name_cols[0].text_inputs("")
-		# name_cols[1].text_inputs("")
-		# name_cols[2].text_inputs("")
-
-		# create colums
-		# col1, col2 = st.beta_columns(2)
-		# col1.subheader('Columnisation')
-		# col2.text("")
-
-		# #create bold,italic,hyperlink,horizontal
-		# st.markdown("helloworld__bold__helloworld_italic__*both*__")
-		# st.markdown("google:[google](https://www.google.com)")
-		# st.markdown("___")
-
-		# #container 
-		# container=st.beta_container()
-		# container.write()
-		# container.write()
-
-
 
 	#if choice is login then show 2 inputs for username and password and get data from the login form
 	elif menu_selected=="3.Login-Form":
