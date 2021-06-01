@@ -3,3 +3,4 @@ numpy==1.18.5
 matplotlib==3.2.2
 streamlit==0.82.0
 joblib==1.0.1
+lime==0.2.0.1
