@@ -24,8 +24,8 @@ from manage_db import *
 import hashlib
 
 # ??
-import lime
-import lime.lime_tabular
+# import lime
+# import lime.lime_tabular
 
 # import app1
 # import app2
