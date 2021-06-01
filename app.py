@@ -203,8 +203,6 @@ def main():
 					columns_names=pd_dataframe.columns.to_list()
 					# feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),columns_names)
 					
-					
-
 					#make a new list after getting values from the columns selected above
 					new_column_dataframe=pd_dataframe[columns_names]
 					
@@ -220,7 +218,7 @@ def main():
 
 #  ******************************bug portion 1 ending*****************************************					
 #  ******************************bug portion 2 starts*****************************************					
-				# elif activity_selected=="2.Check-Prediction":
+				elif activity_selected=="2.Check-Prediction":
 
 					#show a subheader with text
 					st.subheader("Prediction Analytics, here you can input your dygnostic details to get prediction".upper())
@@ -397,6 +395,8 @@ def main():
 
 		else:
 			st.warning("either you did not login to the system or you did not sign up yet".upper())		
+   
+#    ********************************bug 2 ending*******************************************
 
 	elif menu_selected=="4.Sign-up-Form":
 
