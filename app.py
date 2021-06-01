@@ -200,26 +200,27 @@ def main():
 		
 #*********************************bug portion 1******************************************
 					#make a multiselector and pass list column names as arguments for options list
-					feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),pd_dataframe.columns.to_list())
+					columns_names=pd_dataframe.columns.to_list()
+					# feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),columns_names)
 					
-					# columns_names=pd_dataframe.columns.to_list()
+					
 
 					#make a new list after getting values from the columns selected above
-					# new_column_dataframe=pd_dataframe[columns_names]
+					new_column_dataframe=pd_dataframe[columns_names]
 					
 					#show dataframe in webapp
 					# st.dataframe(new_column_dataframe)
-					st.dataframe(pd_dataframe[feature_selected])
+					# st.dataframe(pd_dataframe[feature_selected])
 
 					#make an area chart using list values from above
 					st.subheader("showing a frequency graph of all the columns in the dataframe".upper())
 					
-					# st.area_chart(new_column_dataframe)
-					st.area_chart(feature_selected)
+					st.area_chart(new_column_dataframe)
+					# st.area_chart(pd_dataframe[feature_selected])
 
 #  ******************************bug portion 1 ending*****************************************					
 #  ******************************bug portion 2 starts*****************************************					
-				elif activity_selected=="2.Check-Prediction":
+				# elif activity_selected=="2.Check-Prediction":
 
 					#show a subheader with text
 					st.subheader("Prediction Analytics, here you can input your dygnostic details to get prediction".upper())
@@ -386,8 +387,8 @@ def main():
 						else:
 							st.warning("some error takes place".upper())					
 
-					else:
-						st.warning("some error takes place".upper())
+				else:
+					st.warning("some error takes place".upper())
 
 			else:
 
