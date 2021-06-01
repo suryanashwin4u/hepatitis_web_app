@@ -11,7 +11,7 @@ import numpy as np
 import os
 
 # python package for load machine learning models from the folders
-# import joblib
+import joblib
 
 # python package to plot graphs
 import matplotlib.pyplot as plt
@@ -24,8 +24,8 @@ from manage_db import *
 import hashlib
 
 # ??
-# import lime
-# import lime.lime_tabular
+import lime
+import lime.lime_tabular
 
 # import app1
 # import app2
@@ -43,7 +43,6 @@ import hashlib
 male_female_dict={"male":1,"female":2}
 yes_no_dict={"yes":1,"no":0}
 
-
 # defining function to return values from dictionary keys
 def get_sex_value(sex_key):
 	male_female_dict={"male":1,"female":2}
@@ -57,7 +56,6 @@ def get_yes_no_value(yes_no_val):
 	for key,value in yes_no_dict.items():
 		if yes_no_val==key:
 			return value
-
 
 # load machine learning models from folder in read binary mode
 def loading_ML_model(model_file_name):
@@ -73,7 +71,6 @@ def verify_hash_passwords(get_password,hashed_password):
 	if generate_hash_passwords(get_password) == hashed_password:
 		return hashed_password
 	return False
-
 
 #execution starts here
 def main():
@@ -117,7 +114,6 @@ def main():
 	if menu_selected=="1.Project-Introduction":
 		st.subheader("Hello, Good Morning Users")
 		st.subheader("Welcome to the Hepatitis Mortality Prediction Web Application created using streamlit and other python libraries, which will take inputs of dignosed data and predicts whether patient would live or die using various various machine learning models like linear regression, KNN, etc")
-	
 		st.subheader("Created by:-")
 		st.subheader("1.Name: Ashwani Kumar  [MCA],  Roll no: 40216404518")
 		st.subheader("2.Name: Nitin Sharma   [MCA],  Roll no: 40916404518")
@@ -187,17 +183,11 @@ def main():
 	elif menu_selected=="3.Login-Form":
 		
   		#get username and password from the form
-		get_username=st.text_input("Username")
-		get_password=st.text_input("Password",type='password')
-
-		#set login button
-		if_clicked=st.button('Login')
+		get_username=st.text_input("Username:")
+		get_password=st.text_input("Password:",type='password')
 
 		# if login button is clicked then it returns true and following code executes
-		if if_clicked:
-
-			#create a user table in the database
-			# create_table_db()
+		if st.button('Login'):
 
 			#generate hashed password
 			hashed_password=generate_hash_passwords(get_password)
@@ -205,239 +195,234 @@ def main():
 			#returns true if user already exists else false
 			login_check=check_login(get_username,hashed_password)
 
-
 			if login_check:
 
 				#show success message when login succeed
 				st.success("welcome '{}' to the hepatitis mortality prediction webapp".format(get_username.upper()))
 
-
 				#show text and select box with options from the list of submenu given menu
-				# activity_selected=st.selectbox("please select from the options given below",homepage_menu)
+				activity_selected=st.selectbox("please select from the options given below:".upper(),homepage_menu)
 
 				# if checkplot activity selected from options then following code executes
-				# if activity_selected=="1.Check-Plot":
+				if activity_selected=="1.Check-Plot":
 
-				#show subheader text
-				st.subheader("showing csv file as dataframe which is used for getting data".upper())
+					#show subheader text
+					st.subheader("showing csv file as dataframe which is used for getting data".upper())
 
-				# read csv file from the folder and convert into pandas dataframe
-				pd_dataframe=pd.read_csv("data/clean_hepatitis_dataset.csv")
+					# read csv file from the folder and convert into pandas dataframe
+					pd_dataframe=pd.read_csv("data/clean_hepatitis_dataset.csv")
 
-				#show dataframe in webapp
-				st.dataframe(pd_dataframe)
+					#show dataframe in webapp
+					st.dataframe(pd_dataframe)
 
-				# take class column from dataframe then count the number of values and plot bargraph
-				pd_dataframe['class'].value_counts().plot(kind='bar')
+					# take class column from dataframe then count the number of values and plot bargraph
+					pd_dataframe['class'].value_counts().plot(kind='bar')
 
-				#show subheader text
-				st.subheader("showing bar graph for the number of patients belongs to class 1 and 2".upper())
+					#show subheader text
+					st.subheader("showing bar graph for the number of patients belongs to class 1 and 2".upper())
 	
-				#show pyplot in webapp
-				st.pyplot()
+					#show pyplot in webapp
+					st.pyplot()
 
-
-				# read csv file and convert into dataframe
-				freq_dataframe=pd.read_csv("data/freq_df_hepatitis_dataset.csv")
+					# read csv file and convert into dataframe
+					freq_dataframe=pd.read_csv("data/freq_df_hepatitis_dataset.csv")
 	
-				#show subheader text
-				st.subheader("showing bar chart for count vs age(0-150 years)".upper())
+					#show subheader text
+					st.subheader("showing bar chart for count vs age(0-150 years)".upper())
 
-				#show bar chart in web app having column name count
-				st.bar_chart(freq_dataframe['count'])
-	
-	
-#  *********************************bug portion resolved******************************************
-				#make a multiselector and pass list column names as arguments for options list
-				# feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),pd_dataframe.columns.to_list())
-				columns_names=pd_dataframe.columns.to_list()
+					#show bar chart in web app having column name count
+					st.bar_chart(freq_dataframe['count'])
+		
+#*********************************bug portion 1******************************************
+					#make a multiselector and pass list column names as arguments for options list
+					feature_selected=st.multiselect("choose a feature from the following list to show more results:".upper(),pd_dataframe.columns.to_list())
+					
+					# columns_names=pd_dataframe.columns.to_list()
 
-				#make a new list after getting values from the columns selected above
-				new_column_dataframe=pd_dataframe[columns_names]
+					#make a new list after getting values from the columns selected above
+					# new_column_dataframe=pd_dataframe[columns_names]
+					
+					#show dataframe in webapp
+					# st.dataframe(new_column_dataframe)
+					st.dataframe(pd_dataframe[feature_selected])
 
-				#show dataframe in webapp
-				# st.dataframe(new_column_dataframe)
-				# st.dataframe(feature_selected)
+					#make an area chart using list values from above
+					st.subheader("showing a frequency graph of all the columns in the dataframe".upper())
+					
+					# st.area_chart(new_column_dataframe)
+					st.area_chart(feature_selected)
 
-				#make an area chart using list values from above
-				st.header("showing a frequency graph of all the columns in the dataframe".upper())
-				
-				st.area_chart(new_column_dataframe)
-				# st.area_chart(feature_selected)
+#  ******************************bug portion 1 ending*****************************************					
+#  ******************************bug portion 2 starts*****************************************					
+				elif activity_selected=="2.Check-Prediction":
 
-#  ******************************bug portion resolved ending*****************************************					
-				
-			# elif activity_selected=="2.Check-Prediction":
+					#show a subheader with text
+					st.subheader("Prediction Analytics, here you can input your dygnostic details to get prediction".upper())
 
-				#show a subheader with text
-				st.subheader("Prediction Analytics, here you can input your dygnostic details to get prediction".upper())
+					#set range in input box
+					age=st.number_input("age".upper(),7,80)
 
-				#set range in input box
-				age=st.number_input("age".upper(),7,80)
+					#show radio buttons having options given in male_female_dict dictionary above
+					sex=st.radio("sex".upper(),tuple(male_female_dict.keys()))
 
-				#show radio buttons having options given in male_female_dict dictionary above
-				sex=st.radio("sex".upper(),tuple(male_female_dict.keys()))
+					#show radio buttons having options given in yes_no_dict above
+					steroid=st.radio("Do you take steroid?".upper(),tuple(yes_no_dict.keys()))
 
 
+					#show radio buttons having options given in yes_no_dict above
+					antivirals=st.radio("Do you take Antivirals?".upper(),tuple(yes_no_dict.keys()))
 
-				#show radio buttons having options given in yes_no_dict above
-				steroid=st.radio("Do you take steroid?".upper(),tuple(yes_no_dict.keys()))
 
+					#show radio buttons having options given in yes_no_dict above
+					fatigue=st.radio("Do you have fatigue?".upper(),tuple(yes_no_dict.keys()))
 
-				#show radio buttons having options given in yes_no_dict above
-				antivirals=st.radio("Do you take Antivirals?".upper(),tuple(yes_no_dict.keys()))
 
+					#show radio buttons having options given in yes_no_dict above
+					spiders=st.radio("Presence of spider naevi".upper(),tuple(yes_no_dict.keys()))
 
-				#show radio buttons having options given in yes_no_dict above
-				fatigue=st.radio("Do you have fatigue?".upper(),tuple(yes_no_dict.keys()))
 
+					#show select box having options given in yes_no_dict above 
+					ascites=st.selectbox("Ascites".upper(),tuple(yes_no_dict.keys()))
 
-				#show radio buttons having options given in yes_no_dict above
-				spiders=st.radio("Presence of spider naevi".upper(),tuple(yes_no_dict.keys()))
 
+					#show select box having options given in yes_no_dict above 
+					varices=st.selectbox("presence of varices".upper(),tuple(yes_no_dict.keys()))
 
-				#show select box having options given in yes_no_dict above 
-				ascites=st.selectbox("Ascites".upper(),tuple(yes_no_dict.keys()))
 
+					#show range input
+					bilirubin=st.number_input("bilirubin content".upper(),0.0,8.0)
 
-				#show select box having options given in yes_no_dict above 
-				varices=st.selectbox("presence of varices".upper(),tuple(yes_no_dict.keys()))
 
+					#show range input
+					alk_phosphate=st.number_input("alkaline phosphate content".upper(),0.0,296.0)
 
-				#show range input
-				bilirubin=st.number_input("bilirubin content".upper(),0.0,8.0)
 
+					#show range input
+					sgot=st.number_input("Sgot".upper(),0.0,648.0)
 
-				#show range input
-				alk_phosphate=st.number_input("alkaline phosphate content".upper(),0.0,296.0)
 
+					#show range input
+					albumin=st.number_input("albumin".upper(),0.0,6.4)
 
-				#show range input
-				sgot=st.number_input("Sgot".upper(),0.0,648.0)
 
+					#show range input
+					Prothrombin=st.number_input("Prothrombin".upper(),0.0,100.0)
 
-				#show range input
-				albumin=st.number_input("albumin".upper(),0.0,6.4)
 
+					#show select box having options given in yes_no_dict
+					histology=st.selectbox("Histology".upper(),tuple(yes_no_dict.keys()))
 
-				#show range input
-				Prothrombin=st.number_input("Prothrombin".upper(),0.0,100.0)
 
+					#making a list of features using functions
+					st.subheader("showing list of values returned from above input form".upper())
+					feature_list = [age,get_sex_value(sex),get_yes_no_value(steroid),get_yes_no_value(antivirals),get_yes_no_value(fatigue),get_yes_no_value(spiders),get_yes_no_value(ascites),get_yes_no_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_yes_no_value(histology)]
+					st.write(feature_list)
 
-				#show select box having options given in yes_no_dict
-				histology=st.selectbox("Histology".upper(),tuple(yes_no_dict.keys()))
 
+					#dictionary of list
+					st.subheader("showing in json format after conversion from dictionary".upper())
+					st.json({"age":age,"sex":sex,"steroid":steroid,"antivirals":antivirals,"spiders":spiders,"ascites":ascites,"varices":varices,"bilirubin":bilirubin,"alk_phosphate":alk_phosphate,"sgot":sgot,"albumin":albumin,"Prothrombin":Prothrombin,"histology":histology})
 
-				#making a list of features using functions
-				st.subheader("showing list of values returned from above input form".upper())
-				feature_list = [age,get_sex_value(sex),get_yes_no_value(steroid),get_yes_no_value(antivirals),get_yes_no_value(fatigue),get_yes_no_value(spiders),get_yes_no_value(ascites),get_yes_no_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(Prothrombin),get_yes_no_value(histology)]
-				st.write(feature_list)
 
+					#convert into numpy array and show in webapp
+					st.subheader("After converting into numpy array:".upper())
+					single_sample=np.array(feature_list).reshape(1,-1)
+					st.write(single_sample)
 
-				#dictionary of list
-				st.subheader("showing in json format after conversion from dictionary".upper())
-				st.json({"age":age,"sex":sex,"steroid":steroid,"antivirals":antivirals,"spiders":spiders,"ascites":ascites,"varices":varices,"bilirubin":bilirubin,"alk_phosphate":alk_phosphate,"sgot":sgot,"albumin":albumin,"Prothrombin":Prothrombin,"histology":histology})
+					#make a selectbox carring options given below
+					model_choice=st.selectbox("select model",["LR","KNN","DecisionTree"])
 
+					#make button and it returns true when clicked
+					if st.button("predict"):
 
-				#convert into numpy array and show in webapp
-				st.subheader("After converting into numpy array:".upper())
-				single_sample=np.array(feature_list).reshape(1,-1)
-				st.write(single_sample)
+						#work if model is KNN
+						if model_choice=="KNN":
+								
+							#load model file from models folder
+							loaded_model_ML=loading_ML_model("./models/knn_hepB_model.pkl")
 
-				#make a selectbox carring options given below
-				model_choice=st.selectbox("select model".upper(),["LR","KNN","DecisionTree"])
+							#predict from loaded model and store
+							prediction=loaded_model_ML.predict(single_sample)
 
-				#make button and it returns true when clicked
-				if st.button("predict".upper()):
+							#predict probability from loaded model and store
+							pred_prob=loaded_model_ML.predict_proba(single_sample)
 
-					#work if model is KNN
-					if model_choice=="KNN":
+						#work if model is DecisionTree
+						elif model_choice=="DecisionTree":						
 
-						#load model file from models folder
-						loaded_model_ML=loading_ML_model("./models/knn_hepB_model.pkl")
+							loaded_model_ML=loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
 
-						#predict from loaded model and store
-						prediction=loaded_model_ML.predict(single_sample)
+							prediction=loaded_model_ML.predict(single_sample)
 
-						#predict probability from loaded model and store
-						pred_prob=loaded_model_ML.predict_proba(single_sample)
+							pred_prob=loaded_model_ML.predict_proba(single_sample)
 
-					#work if model is DecisionTree
-					elif model_choice=="DecisionTree":						
+						#work if model is LR
+						else:
 
-						loaded_model_ML=loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
+							loaded_model_ML=loading_ML_model("models/logistic_regression_hepB_model.pkl")
 
-						prediction=loaded_model_ML.predict(single_sample)
+							prediction=loaded_model_ML.predict(single_sample)
 
-						pred_prob=loaded_model_ML.predict_proba(single_sample)
+							pred_prob=loaded_model_ML.predict_proba(single_sample)
 
-					#work if model is LR
-					else:
 
-						loaded_model_ML=loading_ML_model("models/logistic_regression_hepB_model.pkl")
 
-						prediction=loaded_model_ML.predict(single_sample)
+						#if prediction came from above is 1 then patient dies
+						if prediction==1:
 
-						pred_prob=loaded_model_ML.predict_proba(single_sample)
-
-
-
-					#if prediction came from above is 1 then patient dies
-					if prediction==1:
-
-						#show warning message
-						st.warning("Patient dies".upper())
-
-					else:
-
-						#show success message
-						st.success("Patient lives".upper())
-
-						#make a dictionary to store percentage of living or die
-						pred_probability_score={"Die":pred_prob[0][0]*100,"Live":pred_prob[0][1]*100}
-
-						#show a subheader
-						st.subheader("Prediction probability score using {}".upper().format(model_choice))
-
-						#show json format in webapp
-						st.json(pred_probability_score)
-
-					if st.checkbox("Interpret".upper()):
-						if model_choice == "KNN":
-							loaded_model_ML = loading_ML_model("models/knn_hepB_model.pkl")
-
-						elif model_choice == "DecisionTree":
-							loaded_model_ML = loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
+							#show warning message
+							st.warning("Patient dies".upper())
 
 						else:
-							loaded_model_ML = loading_ML_model("models/logistic_regression_hepB_model.pkl")
 
-						# loaded_model_ML = loading_ML_model("models/logistic_regression_model.pkl")							
-						# 1 Die and 2 Live
-						df = pd.read_csv("data/clean_hepatitis_dataset.csv")
-						x = df[['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']]
-						feature_names = ['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']
-						class_names = ['Die(1)','Live(2)']
-						explainer = lime.lime_tabular.LimeTabularExplainer(x.values,feature_names=feature_names, class_names=class_names,discretize_continuous=True)
-						# The Explainer Instance
-						exp = explainer.explain_instance(np.array(feature_list), loaded_model_ML.predict_proba,num_features=13, top_labels=1)
-						exp.show_in_notebook(show_table=True, show_all=False)
-						# exp.save_to_file('lime_oi.html')
-						st.write(exp.as_list())
-						new_exp = exp.as_list()
-						label_limits = [i[0] for i in new_exp]
-						# st.write(label_limits)
-						label_scores = [i[1] for i in new_exp]
-						plt.barh(label_limits,label_scores)
-						st.pyplot()
-						plt.figure(figsize=(20,10))
-						fig = exp.as_pyplot_figure()
-						st.pyplot()
+							#show success message
+							st.success("Patient lives".upper())
+
+							#make a dictionary to store percentage of living or die
+							pred_probability_score={"Die":pred_prob[0][0]*100,"Live":pred_prob[0][1]*100}
+
+							#show a subheader
+							st.subheader("Prediction probability score using {}".upper().format(model_choice))
+
+							#show json format in webapp
+							st.json(pred_probability_score)
+
+						if st.checkbox("Interpret".upper()):
+							if model_choice == "KNN":
+								loaded_model_ML = loading_ML_model("models/knn_hepB_model.pkl")
+
+							elif model_choice == "DecisionTree":
+								loaded_model_ML = loading_ML_model("models/decision_tree_clf_hepB_model.pkl")
+
+							else:
+								loaded_model_ML = loading_ML_model("models/logistic_regression_hepB_model.pkl")
+
+							# loaded_model_ML = loading_ML_model("models/logistic_regression_model.pkl")							
+							# 1 Die and 2 Live
+							df = pd.read_csv("data/clean_hepatitis_dataset.csv")
+							x = df[['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']]
+							feature_names = ['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']
+							class_names = ['Die(1)','Live(2)']
+							explainer = lime.lime_tabular.LimeTabularExplainer(x.values,feature_names=feature_names, class_names=class_names,discretize_continuous=True)
+							# The Explainer Instance
+							exp = explainer.explain_instance(np.array(feature_list), loaded_model_ML.predict_proba,num_features=13, top_labels=1)
+							exp.show_in_notebook(show_table=True, show_all=False)
+							# exp.save_to_file('lime_oi.html')
+							st.write(exp.as_list())
+							new_exp = exp.as_list()
+							label_limits = [i[0] for i in new_exp]
+							# st.write(label_limits)
+							label_scores = [i[1] for i in new_exp]
+							plt.barh(label_limits,label_scores)
+							st.pyplot()
+							plt.figure(figsize=(20,10))
+							fig = exp.as_pyplot_figure()
+							st.pyplot()
+						else:
+							st.warning("some error takes place".upper())					
+
 					else:
-						st.warning("some error takes place".upper())					
-
-				else:
-					st.warning("some error takes place".upper())
+						st.warning("some error takes place".upper())
 
 			else:
 
